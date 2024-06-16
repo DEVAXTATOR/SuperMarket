@@ -8,7 +8,7 @@ using UseCases.ProductsUseCases;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Cashiers")]
     public class SalesController : Controller
     {
         private readonly IViewCategoriesUseCase viewCategoriesUseCase;
@@ -46,11 +46,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Sell the product
+                var cashierName = User.Identity.Name; 
                 sellProductUseCase.Execute(
-                    "cashier1",
+                    cashierName,
                     salesViewModel.SelectedProductId,
-                    salesViewModel.QuantityToSell);                
+                    salesViewModel.QuantityToSell);
             }
 
             var product = viewSelectedProductUseCase.Execute(salesViewModel.SelectedProductId);
