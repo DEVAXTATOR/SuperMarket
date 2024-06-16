@@ -2,7 +2,7 @@
 
 @section title {
     <div class="row">
-        <div class="col-7"><h3>Cashier's Console</h3></div>
+        <div class="col-7"><h3>Consola Vendas</h3></div>
         <div class="col-2"><label for="cashier">Cashier Name:</label></div>
         <div class="col-3">
             @* Display Cashier's name here *@
@@ -17,7 +17,7 @@
         <div class="text-danger" asp-validation-summary="All"></div>
         @* Category selection *@
         <select asp-for="SelectedCategoryId" class="form-control">
-            <option>- Please Select -</option>
+            <option>- Por favor Selecione -</option>
             @if (Model.Categories != null && Model.Categories.Count() > 0)
             {
                 @foreach (var cat in Model.Categories)

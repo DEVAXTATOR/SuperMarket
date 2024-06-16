@@ -13,7 +13,7 @@ namespace WebApp.ViewModels.Validations
             {
                 if (salesViewModel.QuantityToSell <= 0)
                 {
-                    return new ValidationResult("The quantity to sell has to be greater than zero.");
+                    return new ValidationResult("Quantidade tem que ser mais do zero.");
                 }
                 else
                 {
@@ -25,11 +25,11 @@ namespace WebApp.ViewModels.Validations
                         if (product != null)
                         {
                             if (product.Quantity < salesViewModel.QuantityToSell)
-                                return new ValidationResult($"{product.Name} only has {product.Quantity} left. It is not enough.");
+                                return new ValidationResult($"{product.Name} so tem {product.Quantity} nao chega.");
                         }
                         else
                         {
-                            return new ValidationResult("The selected product doesn't exist.");
+                            return new ValidationResult("O produto selecionado nao existe.");
                         }
                     }                    
                 }
