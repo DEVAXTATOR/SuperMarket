@@ -1,6 +1,5 @@
-﻿using CoreBusiness;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using Microsoft.EntityFrameworkCore;
+using CoreBusiness;
 
 namespace Plugins.DataStore.SQL
 {
@@ -21,8 +20,19 @@ namespace Plugins.DataStore.SQL
                 .WithOne(p => p.Category)
                 .HasForeignKey(p => p.CategoryId);
 
+            // Seeding some data
+            modelBuilder.Entity<Category>().HasData(
+                    new Category { CategoryId = 1, Name = "Beverage", Description = "Beverage" },
+                    new Category { CategoryId = 2, Name = "Bakery", Description = "Bakery" },
+                    new Category { CategoryId = 3, Name = "Meat", Description = "Meat" }
+                );
 
-          
+            modelBuilder.Entity<Product>().HasData(
+                    new Product { ProductId = 1, CategoryId = 1, Name = "Iced Tea", Quantity = 100, Price = 1.99 },
+                    new Product { ProductId = 2, CategoryId = 1, Name = "Canada Dry", Quantity = 200, Price = 1.99 },
+                    new Product { ProductId = 3, CategoryId = 2, Name = "Whole Wheat Bread", Quantity = 300, Price = 1.50 },
+                    new Product { ProductId = 4, CategoryId = 2, Name = "White Bread", Quantity = 300, Price = 1.50 }
+                );
         }
     }
 }

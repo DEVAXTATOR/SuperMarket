@@ -1,31 +1,35 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using WebApp.Data;
 using Plugins.DataStore.SQL;
-using System.Net.Mime;
-using System.Text;
 using UseCases;
 using UseCases.CategoriesUseCases;
 using UseCases.DataStorePluginInterfaces;
 using UseCases.ProductsUseCases;
-using Microsoft.AspNetCore.Identity;
-using WebApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adiciona o contexto do Identity
 builder.Services.AddDbContext<AccountContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MarketManagement"));
 });
 
+// Adiciona o contexto do Market
 builder.Services.AddDbContext<MarketContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MarketManagement"));
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AccountContext>();
+// Configura a identidade padrão
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<AccountContext>();
 
+// Configura serviços para Razor Pages e Controllers com Views
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
+// Configura a autorização
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Inventory", p => p.RequireClaim("Position", "Inventory"));
@@ -33,13 +37,12 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Users", p => p.RequireClaim("Position", "Users"));
 });
 
+// Configura injeção de dependência para repositórios
+builder.Services.AddTransient<ICategoryRepository, CategorySQLRepository>();
+builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
+builder.Services.AddTransient<ITransactionRepository, TransactionSQLRepository>();
 
-{
-    builder.Services.AddTransient<ICategoryRepository, CategorySQLRepository>();
-    builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
-    builder.Services.AddTransient<ITransactionRepository, TransactionSQLRepository>();
-}
-
+// Configura injeção de dependência para casos de uso
 builder.Services.AddTransient<IViewCategoriesUseCase, ViewCategoriesUseCase>();
 builder.Services.AddTransient<IViewSelectedCategoryUseCase, ViewSelectedCategoryUseCase>();
 builder.Services.AddTransient<IEditCategoryUseCase, EditCategoryUseCase>();
@@ -69,6 +72,5 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 app.Run();
