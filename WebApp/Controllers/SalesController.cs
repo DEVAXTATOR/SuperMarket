@@ -8,6 +8,7 @@ using UseCases.ProductsUseCases;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Policy = "Admin")]
     [Authorize(Policy = "Cashiers")]
     public class SalesController : Controller
     {

@@ -34,7 +34,11 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Inventory", p => p.RequireClaim("Position", "Inventory"));
     options.AddPolicy("Cashiers", p => p.RequireClaim("Position", "Cashier"));
-    options.AddPolicy("Users", p => p.RequireClaim("Position", "Admin"));
+    options.AddPolicy("Admin", policy =>
+           policy.RequireAssertion(context =>
+               context.User.HasClaim("Position", "Admin") ||
+               context.User.HasClaim("Position", "Inventory") ||
+               context.User.HasClaim("Position", "Cashier")));
 });
 
 // Configura injeção de dependência para repositórios
